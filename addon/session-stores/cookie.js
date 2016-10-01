@@ -95,7 +95,9 @@ export default BaseStore.extend({
   _cookieExpirationTime: null,
   cookieExpirationTime: persistingProperty(),
 
-  _secureCookies: window.location.protocol === 'https:',
+  _secureCookies: computed(function() {
+    return window.location.protocol === 'https:';
+  }).volatile(),
 
   _syncDataTimeout: null,
 
@@ -241,7 +243,7 @@ export default BaseStore.extend({
     let cookieDomain = this.get('cookieDomain');
     let domain = isEmpty(cookieDomain) ? '' : `;domain=${cookieDomain}`;
     let path = '; path=/';
-    let secure = this._secureCookies ? ';secure' : '';
+    let secure = this.get('_secureCookies') ? ';secure' : '';
     return `${name}=${value}${domain}${path}${expires}${secure}`;
   },
 
